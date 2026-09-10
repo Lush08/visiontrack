@@ -61,3 +61,7 @@ runs/
 *.tflite
 *.paddle
 *.ncnn
+
+# Test artifacts (root-level test images)
+/test_*.jpg
+/test_*.png

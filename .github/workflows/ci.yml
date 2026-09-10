@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  python-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest
+
+      - name: Run tests
+        run: |
+          cd python
+          python -m pytest ../tests/ -v --tb=short
+
+      - name: Lint with ruff
+        run: |
+          pip install ruff
+          ruff check python/ --select E,F,W --ignore E501
+
+  cpp-build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ONNX Runtime (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          wget -q https://github.com/microsoft/onnxruntime/releases/download/v1.20.0/onnxruntime-linux-x64-1.20.0.tgz
+          tar -xzf onnxruntime-linux-x64-1.20.0.tgz
+          echo "ONNXRUNTIME_DIR=${{ github.workspace }}/onnxruntime-linux-x64-1.20.0" >> $GITHUB_ENV
+
+      - name: Install ONNX Runtime (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          Invoke-WebRequest -Uri "https://github.com/microsoft/onnxruntime/releases/download/v1.20.0/onnxruntime-win-x64-1.20.0.zip" -OutFile "ort.zip"
+          Expand-Archive -Path "ort.zip" -DestinationPath .
+          echo "ONNXRUNTIME_DIR=${{ github.workspace }}/onnxruntime-win-x64-1.20.0" >> $env:GITHUB_ENV
+
+      - name: Install OpenCV
+        run: |
+          sudo apt-get update && sudo apt-get install -y libopencv-dev
+        if: runner.os == 'Linux'
+
+      - name: Install OpenCV (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          choco install opencv -y
+
+      - name: Configure CMake
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Smoke test
+        run: ./build/Release/visiontrack --help || ./build/visiontrack --help
