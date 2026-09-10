@@ -1,0 +1,63 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+.venv/
+venv/
+env/
+
+# Model weights (large files)
+models/*.pt
+models/*.onnx
+models/*.engine
+models/*.weights
+
+# Training data
+data/*
+!data/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Jupyter
+.ipynb_checkpoints/
+
+# C++ build
+cpp/build/
+cpp/cmake-build-*/
+build/
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment
+.env
+*.env
+
+# Logs
+*.log
+wandb/
+runs/
+
+# Export artifacts
+*.torchscript
+*.xml
+*.bin
+*.tflite
+*.paddle
+*.ncnn
