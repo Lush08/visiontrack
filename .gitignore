@@ -65,3 +65,6 @@ runs/
 # Test artifacts (root-level test images)
 /test_*.jpg
 /test_*.png
+
+# Local Netlify folder
+.netlify
