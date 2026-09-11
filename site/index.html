@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="VisionTrack — a real-time multi-object detection and tracking system built with YOLO26, ONNX Runtime, and ByteTrack. Python and C++ inference backends with a live Gradio web demo." />
+  <title>VisionTrack — Real-Time Object Detection &amp; Tracking</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='4' y='4' width='24' height='24' rx='6' fill='%233b82f6'/%3E%3Crect x='9' y='10' width='14' height='12' rx='1' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="nav-inner">
+      <a href="#top" class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-name">VisionTrack</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How it works</a>
+        <a href="#stack">Stack</a>
+        <a href="#quickstart">Quick start</a>
+        <a href="https://github.com/Lush08/visiontrack" class="btn btn-ghost btn-sm" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- ================= Hero ================= -->
+    <section class="hero">
+      <div class="container">
+        <p class="eyebrow">Python &nbsp;·&nbsp; C++ &nbsp;·&nbsp; ONNX Runtime &nbsp;·&nbsp; YOLO26</p>
+        <h1>Real-time multi-object <span class="accent">detection &amp; tracking</span></h1>
+        <p class="lede">
+          A complete computer-vision pipeline: detect objects with YOLO26 across 80 classes,
+          keep persistent IDs through IoU-based ByteTrack matching, and run inference from
+          both a Python and a C++17 backend.
+        </p>
+        <div class="hero-actions">
+          <a href="https://github.com/Lush08/visiontrack" class="btn btn-primary" target="_blank" rel="noopener">
+            View on GitHub
+            <svg class="icon" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+          </a>
+          <a href="#demo" class="btn btn-outline">See it in action</a>
+        </div>
+        <div class="hero-meta">
+          <span><strong>80</strong> classes</span>
+          <span><strong>2</strong> inference backends</span>
+          <span><strong>23</strong> passing tests</span>
+          <span><strong>MIT</strong> licensed</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Demo ================= -->
+    <section id="demo" class="section demo-section">
+      <div class="container">
+        <h2 class="section-title">Detection in action</h2>
+        <p class="section-sub">A single frame through the pipeline — raw input on the left, annotated output on the right. Boxes, class labels, and confidence scores drawn in native OpenCV.</p>
+        <div class="demo-grid">
+          <figure class="demo-card">
+            <img src="assets/input-demo.jpg" alt="Raw input image of a street scene" loading="lazy" />
+            <figcaption>Input frame</figcaption>
+          </figure>
+          <figure class="demo-card">
+            <img src="assets/detection-demo.jpg" alt="Same scene with detected objects bounded and labeled" loading="lazy" />
+            <figcaption>YOLO26 output — boxes + labels</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Features ================= -->
+    <section id="features" class="section alt">
+      <div class="container">
+        <h2 class="section-title">What it does</h2>
+        <p class="section-sub">Three interaction modes, one shared pipeline.</p>
+        <div class="feature-grid">
+          <div class="feature">
+            <div class="feature-icon">🖼️</div>
+            <h3>Image detection</h3>
+            <p>Upload any image and get objects bounded with class labels and confidence scores in a single pass.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">🎬</div>
+            <h3>Video tracking</h3>
+            <p>Full videos processed frame-by-frame. ByteTrack assigns each object a persistent ID that survives across frames.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">📹</div>
+            <h3>Live webcam</h3>
+            <p>Real-time detection and tracking straight from your camera, streamed at interactive frame rates.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">⚙️</div>
+            <h3>Tunable inference</h3>
+            <p>Confidence and IoU thresholds exposed as live controls, so you can trade precision against recall on the fly.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= How it works ================= -->
+    <section id="how-it-works" class="section pipeline-section">
+      <div class="container">
+        <h2 class="section-title">How it works</h2>
+        <p class="section-sub">A letterboxed 640×640 tensor flows through the model, then back out to original coordinates.</p>
+        <div class="pipeline">
+          <div class="pipeline-stage">
+            <span class="stage-num">01</span>
+            <h4>Preprocess</h4>
+            <p>Letterbox resize to 640×640, BGR→RGB, normalize to [-1, 1], NCHW layout.</p>
+          </div>
+          <div class="pipeline-arrow" aria-hidden="true">→</div>
+          <div class="pipeline-stage">
+            <span class="stage-num">02</span>
+            <h4>Infer</h4>
+            <p>YOLO26 runs in ONNX Runtime (Python or C++), emitting a raw <code>(1, 84, 8400)</code> tensor.</p>
+          </div>
+          <div class="pipeline-arrow" aria-hidden="true">→</div>
+          <div class="pipeline-stage">
+            <span class="stage-num">03</span>
+            <h4>Decode</h4>
+            <p>Anchor-free decode + class-aware NMS distill detections down to boxes, scores, and class IDs.</p>
+          </div>
+          <div class="pipeline-arrow" aria-hidden="true">→</div>
+          <div class="pipeline-stage">
+            <span class="stage-num">04</span>
+            <h4>Track</h4>
+            <p>IoU matching assigns persistent IDs; stale tracks age out after 30 missed frames.</p>
+          </div>
+          <div class="pipeline-arrow" aria-hidden="true">→</div>
+          <div class="pipeline-stage">
+            <span class="stage-num">05</span>
+            <h4>Annotate</h4>
+            <p>Boxes, label pills, track IDs, and motion trails drawn back onto the original frame.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Tech stack ================= -->
+    <section id="stack" class="section alt stack-section">
+      <div class="container">
+        <h2 class="section-title">Tech stack</h2>
+        <p class="section-sub">Deliberately standard and demonstrable.</p>
+        <div class="stack-grid">
+          <div class="stack-item"><span class="stack-label">Detection</span><span>YOLO26 (Ultralytics)</span></div>
+          <div class="stack-item"><span class="stack-label">Model format</span><span>ONNX, opset 17</span></div>
+          <div class="stack-item"><span class="stack-label">Python inference</span><span>ONNX Runtime</span></div>
+          <div class="stack-item"><span class="stack-label">C++ inference</span><span>ONNX Runtime C++ API</span></div>
+          <div class="stack-item"><span class="stack-label">Tracking</span><span>ByteTrack (IoU-based)</span></div>
+          <div class="stack-item"><span class="stack-label">Web demo</span><span>Gradio</span></div>
+          <div class="stack-item"><span class="stack-label">Build</span><span>CMake + pip</span></div>
+          <div class="stack-item"><span class="stack-label">CI / CD</span><span>GitHub Actions</span></div>
+          <div class="stack-item"><span class="stack-label">Testing</span><span>pytest, 23 tests</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Quick start ================= -->
+    <section id="quickstart" class="section">
+      <div class="container">
+        <h2 class="section-title">Quick start</h2>
+        <p class="section-sub">Clone, install, run.</p>
+        <div class="code-block">
+          <div class="code-header"><span>bash</span><button class="copy-btn" data-copy>Copy</button></div>
+          <pre><code># Clone and install
+git clone https://github.com/Lush08/visiontrack.git
+cd visiontrack
+python -m venv venv &amp;&amp; source venv/bin/activate   # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+
+# Launch the interactive demo
+cd python
+python demo_gradio.py        # → http://localhost:7860
+
+# Or run inference on a single image from the CLI
+python demo_tracker.py --source ../test_bus.jpg --output result.jpg</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= About ================= -->
+    <section class="section about-section alt">
+      <div class="container">
+        <h2 class="section-title">Built by Armaan Dhall</h2>
+        <p class="section-sub">A portfolio project demonstrating the full ML deployment path — training, export, inference in two languages, web demo, and CI.</p>
+        <div class="about-links">
+          <a href="https://github.com/Lush08" target="_blank" rel="noopener">GitHub</a>
+          <span class="dot" aria-hidden="true">·</span>
+          <a href="https://github.com/Lush08/visiontrack" target="_blank" rel="noopener">Repository</a>
+          <span class="dot" aria-hidden="true">·</span>
+          <span>MIT License</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>© <span id="year"></span> VisionTrack · MIT License · Built with YOLO26, ONNX Runtime &amp; ByteTrack</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

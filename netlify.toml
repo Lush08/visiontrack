@@ -1,0 +1,4 @@
+# Netlify site configuration
+# Deploys the static landing page in site/ — no build step required.
+[build]
+  publish = "site"

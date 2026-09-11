@@ -29,11 +29,78 @@ from utils.visualization import COCO_CLASSES, draw_detections, draw_fps, draw_tr
 
 
 # ---------------------------------------------------------------------------
+# Theme + branding (matched to the static landing page in site/)
+# ---------------------------------------------------------------------------
+def _build_theme() -> gr.themes.Base:
+    """Dark theme consistent with the site/ landing page."""
+    return gr.themes.Base(
+        primary_hue=gr.themes.colors.blue,
+        neutral_hue=gr.themes.colors.slate,
+        font=["Inter", "Segoe UI", "system-ui", "sans-serif"],
+        font_mono=["JetBrains Mono", "ui-monospace", "monospace"],
+        radius_size=gr.themes.sizes.radius_md,
+    )
+
+
+CUSTOM_CSS = """
+/* Surfaces — dark background consistent with site/ landing page */
+.gradio-container {
+    background: #0b0f14 !important;
+    color: #e6edf5 !important;
+}
+.wrap {
+    background: transparent !important;
+}
+footer { display: none !important; }
+
+/* Typography */
+h1, h2, h3, h4, .prose { color: #e6edf5 !important; }
+
+/* Header banner */
+.vt-header { text-align: center; padding: 1.75rem 0 0.5rem; }
+.vt-header .vt-brand { font-size: 1.9rem; font-weight: 750; letter-spacing: -0.02em; color: #e6edf5; }
+.vt-header .vt-brand span { color: #3b82f6; }
+.vt-header .vt-sub { color: #94a3b8; font-size: 0.95rem; margin-top: 0.35rem; }
+
+/* Tabs */
+.tab-nav button { color: #94a3b8 !important; }
+.tab-nav button.selected { color: #e6edf5 !important; border-color: #3b82f6 !important; }
+
+/* Cards / panels */
+.gr-box, .form, .gr-panel {
+    background: #151b24 !important;
+    border-color: #232d3a !important;
+    color: #e6edf5 !important;
+}
+.form .label, .gr-box label { color: #94a3b8 !important; }
+
+/* Buttons */
+.gr-button { border-radius: 10px !important; }
+.gr-button-primary {
+    background: #3b82f6 !important; border-color: #3b82f6 !important; color: #0b0f14 !important;
+}
+.gr-button-primary:hover { background: #2563eb !important; }
+
+/* Sliders */
+.gr-slider input[type="range"] { background: #232d3a; }
+.gr-slider input[type="range"]::-webkit-slider-thumb { background: #3b82f6; }
+
+/* Accordion */
+.gr-accordion { border-color: #232d3a !important; }
+.gr-accordion .label-wrap { color: #94a3b8 !important; }
+
+/* About page links */
+.vt-about a { color: #3b82f6; text-decoration: none; }
+.vt-about a:hover { text-decoration: underline; }
+"""
+
+
+# ---------------------------------------------------------------------------
 # Globals (lazy-loaded)
 # ---------------------------------------------------------------------------
 _detector: Detector | None = None
 _preprocessor: Preprocessor | None = None
-_model_path: str = "models/yolo26n.onnx"
+_model_path: str = "models/yolo26n.onnx"  # resolved relative to project root
 _imgsz: int = 640
 _num_classes: int = 80
 _use_gpu: bool = False
@@ -228,19 +295,14 @@ def build_demo(model_path: str = "models/yolo26n.onnx", imgsz: int = 640, num_cl
     _num_classes = num_classes
     _use_gpu = use_gpu
 
-    css = """
-    .main-title { text-align: center; margin-bottom: 0.5em; }
-    .subtitle { text-align: center; color: #666; font-size: 0.95em; margin-top: 0; }
-    """
-
     with gr.Blocks(
         title="VisionTrack — Real-Time Object Detection & Tracking",
-        css=css,
-        theme=gr.themes.Soft(),
     ) as demo:
         gr.HTML(
-            '<h1 class="main-title">🎯 VisionTrack</h1>'
-            '<p class="subtitle">Real-Time Multi-Object Detection & Tracking — YOLO26 + ByteTrack + ONNX Runtime</p>'
+            '<div class="vt-header">'
+            '<div class="vt-brand">Vision<span>Track</span></div>'
+            '<div class="vt-sub">Real-Time Multi-Object Detection &amp; Tracking — YOLO26 + ByteTrack + ONNX Runtime</div>'
+            '</div>'
         )
 
         with gr.Tabs():
@@ -320,35 +382,31 @@ def build_demo(model_path: str = "models/yolo26n.onnx", imgsz: int = 640, num_cl
 
             # ---- Tab 4: About ----
             with gr.TabItem("ℹ️ About"):
-                gr.Markdown("""
-                ## VisionTrack
-
-                A real-time multi-object detection and tracking system built for portfolio demonstration.
-
-                ### Tech Stack
-                | Component | Technology |
-                |-----------|-----------|
-                | Detection | YOLO26 (Ultralytics, 2026) |
-                | Inference | ONNX Runtime |
-                | Tracking | ByteTrack (IoU-based) |
-                | Frontend | Gradio |
-
-                ### Features
-                - **Image Detection**: Upload any image, get instant object detection with bounding boxes
-                - **Video Processing**: Full video with persistent track IDs across frames
-                - **Live Webcam**: Real-time detection and tracking from your camera
-                - **80 COCO Classes**: Detects people, vehicles, animals, furniture, and more
-
-                ### How It Works
-                1. Input image/video is preprocessed (letterbox resize, normalization)
-                2. YOLO26 detects objects via ONNX Runtime inference
-                3. ByteTrack assigns persistent IDs across frames using IoU matching
-                4. Results are annotated with bounding boxes, labels, and track IDs
-
-                ### Author
-                **Armaan Dhall** — 2nd Year CSE AI/ML Student
-                GitHub: [Lush08](https://github.com/Lush08)
-                """)
+                gr.HTML(
+                    '<div class="vt-about">'
+                    '<h2>VisionTrack</h2>'
+                    '<p>A real-time multi-object detection and tracking system '
+                    'built to demonstrate the full ML deployment path — training, ONNX export, '
+                    'inference in Python and C++, and an interactive web demo.</p>'
+                    '<h3>Tech stack</h3>'
+                    '<ul>'
+                    '<li><strong>Detection</strong> — YOLO26 (Ultralytics, 2026)</li>'
+                    '<li><strong>Inference</strong> — ONNX Runtime (Python + C++17)</li>'
+                    '<li><strong>Tracking</strong> — ByteTrack (IoU-based)</li>'
+                    '<li><strong>Frontend</strong> — Gradio</li>'
+                    '</ul>'
+                    '<h3>How it works</h3>'
+                    '<ol>'
+                    '<li>Input is letterbox-resized to 640×640 and normalized.</li>'
+                    '<li>YOLO26 runs via ONNX Runtime inference.</li>'
+                    '<li>ByteTrack assigns persistent IDs across frames using IoU matching.</li>'
+                    '<li>Results are annotated with bounding boxes, labels, and track IDs.</li>'
+                    '</ol>'
+                    '<h3>Author</h3>'
+                    '<p><strong>Armaan Dhall</strong> — 2nd Year CSE AI/ML Student<br>'
+                    'GitHub: <a href="https://github.com/Lush08" target="_blank">Lush08</a></p>'
+                    '</div>'
+                )
 
     return demo
 
@@ -370,8 +428,11 @@ def parse_args() -> argparse.Namespace:
 def main():
     args = parse_args()
 
-    # Verify model exists
+    # Resolve model path relative to project root (parent of python/)
+    project_root = Path(__file__).resolve().parent.parent
     model_path = Path(args.model)
+    if not model_path.is_absolute():
+        model_path = project_root / model_path
     if not model_path.exists():
         print(f"Error: Model not found at {model_path}")
         print("  Export a model first: python export_onnx.py --weights yolo26n.pt")
@@ -386,7 +447,12 @@ def main():
     )
 
     print(f"\nStarting Gradio server on port {args.port}...")
-    demo.launch(server_port=args.port, share=args.share)
+    demo.launch(
+        server_port=args.port,
+        share=args.share,
+        theme=_build_theme(),
+        css=CUSTOM_CSS,
+    )
 
 
 if __name__ == "__main__":
